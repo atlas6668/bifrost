@@ -1,0 +1,105 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.flywaydb:flyway-gradle-plugin:3.0"
+    }
+}
+apply plugin: 'flyway'
+
+group = 'yggdrasil-asgard'
+
+
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'jetty'
+apply plugin: 'eclipse'
+apply plugin: 'eclipse-wtp'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version = '1.0'
+
+ext.drivers = ["firefox", "chrome", "ie"]
+
+repositories {
+    //mavenCentral()
+    maven {
+        //url 'http://mirrors.ibiblio.org/pub/mirrors/maven2' 
+        //url 'http://uk.maven.org/maven2'
+        url 'http://repo1.maven.org/maven2/'
+    }
+}
+
+
+
+configurations {
+    //compile.exclude module: 'commons'
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+    all*.exclude group: 'log4j', module: 'log4j'
+}
+// configurations { providedCompile }
+
+dependencies {
+    
+    // logging 
+    def dom4jVersion = "1.6.1";
+    
+    def servletApiVersion = "3.1.0"
+    
+    // apache
+    def apachCommonsLangVersion = "3.3.2"
+    def httpclientVersion = "4.4"
+    
+    // json
+    def fastjsonVersion = "1.2.3" 
+    
+    // jackson
+    def jsonVersion = "2.4.2"
+    
+    // curl
+    //def curlVersion = "0.5.4"
+    
+    
+    
+// ------------------------------------------------------------------------------------------------------------------------
+    
+    // logging 
+    compile "dom4j:dom4j:$dom4jVersion"
+    
+    providedCompile "javax.servlet:javax.servlet-api:$servletApiVersion"
+    
+    // apache
+    compile "org.apache.commons:commons-lang3:$apachCommonsLangVersion"
+    
+    // fastjson
+    compile "com.alibaba:fastjson:$fastjsonVersion"
+    //compile "org.apache.httpcomponents:httpclient:$httpclientVersion"
+    //compile "org.apache.httpcomponents:httpmime:$httpclientVersion"
+    
+    // jackson
+    compile "com.fasterxml.jackson.core:jackson-core:$jsonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jsonVersion"
+    
+    // curl
+    //compile "net.awired.js:curl:$curlVersion"
+
+
+    // 加载本地jar
+    compile fileTree(dir:'libs',include:['*.jar'])
+	
+}
+
+[compileJava, compileTestJava]*.options*.compilerArgs = ['-Xlint:all']
+[compileJava, javadoc, compileTestJava]*.options*.encoding = 'UTF-8'
+
+javadoc {
+    options.encoding = "UTF-8"
+    options.docEncoding = "UTF-8"
+    options.charSet = "UTF-8"
+}
+
+flyway {
+}
